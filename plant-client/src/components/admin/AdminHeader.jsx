@@ -11,7 +11,7 @@ function AdminHeader({
       align="center"
       mb={6}
     >
-      <Heading size="lg">{title}</Heading>
+      <Heading size="lg" color="green.500">{title}</Heading>
 
       {buttonText && (
         <Button

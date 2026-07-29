@@ -1,6 +1,6 @@
 import { HStack, Select, IconButton } from "@chakra-ui/react";
 import { SlidersHorizontal } from "lucide-react";
-import { SORT_OPTIONS } from "../services/plantService";
+import { SORT_OPTIONS } from "../../services/plantService";
 
 export default function SortDropdown({ value, onChange, onFilterClick }) {
   return (

@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 import AdminHeader from "../../components/admin/AdminHeader";
@@ -53,21 +53,34 @@ export default function Plants() {
   };
 
   return (
-    <Box p={6}>
+    <Box bg="gray.50" minH="100vh" p={8}>
       <AdminHeader
-        title="Plants"
+        title="Plant Management"
         buttonText="Add Plant"
         onClick={handleAdd}
       />
 
-      <DataTable
-        columns={columns}
-        data={plants}
-        actions={{
-          onEdit: handleEdit,
-          onDelete: handleDelete,
-        }}
-      />
+      <Text color="gray.500" mt={2} mb={6}>
+        Manage all plants available on the platform.
+      </Text>
+
+      <Box
+        bg="white"
+        p={6}
+        borderRadius="2xl"
+        boxShadow="lg"
+        border="1px solid"
+        borderColor="gray.200"
+      >
+        <DataTable
+          columns={columns}
+          data={plants}
+          actions={{
+            onEdit: handleEdit,
+            onDelete: handleDelete,
+          }}
+        />
+      </Box>
     </Box>
   );
 }

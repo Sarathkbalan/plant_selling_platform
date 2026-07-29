@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\PlantProject\\PlantApi\\PlantApi.csproj": {}
+    "D:\\plant_selling_platform\\PlantApi\\PlantApi.csproj": {}
   },
   "projects": {
-    "D:\\PlantProject\\PlantApi\\PlantApi.csproj": {
+    "D:\\plant_selling_platform\\PlantApi\\PlantApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\PlantProject\\PlantApi\\PlantApi.csproj",
+        "projectUniqueName": "D:\\plant_selling_platform\\PlantApi\\PlantApi.csproj",
         "projectName": "PlantApi",
-        "projectPath": "D:\\PlantProject\\PlantApi\\PlantApi.csproj",
+        "projectPath": "D:\\plant_selling_platform\\PlantApi\\PlantApi.csproj",
         "packagesPath": "C:\\Users\\sarat\\.nuget\\packages\\",
-        "outputPath": "D:\\PlantProject\\PlantApi\\obj\\",
+        "outputPath": "D:\\plant_selling_platform\\PlantApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\sarat\\AppData\\Roaming\\NuGet\\NuGet.Config"

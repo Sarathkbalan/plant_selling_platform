@@ -16,6 +16,8 @@
 // }
 
 // export default PlantGrid;
+
+
 import { useState } from "react";
 import { SimpleGrid, Button, Flex, Text } from "@chakra-ui/react";
 import PlantCard from "./PlantCard";

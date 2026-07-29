@@ -1,12 +1,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
-import Navbar from "../../components/Navbar";
-import Hero from "../../components/Hero";
-import CategoryFilter from "../../components/CategoryFilter";
-import SortDropdown from "../../components/SortDropdown";
-import PlantGrid from "../../components/PlantGrid";
-import Footer from "../../components/Footer";
+import CategoryFilter from "../../components/customer/CategoryFilter";
+import SortDropdown from "../../components/customer/SortDropdown";
+import PlantGrid from "../../components/customer/PlantGrid";
+import Hero from "../../components/customer/Hero";
 
 import {
   getPlants,
@@ -44,9 +42,7 @@ export default function Home() {
   };
 
   return (
-    <Box minH="100vh" bg="#FAF9F4">
-      {/* <Navbar cartCount={cartCount} activeLink="Browse" /> */}
-
+    <Box bg="#FAF9F4" >
       <Hero />
 
       <Box as="main" maxW="7xl" mx="auto" px={6} mt={10}>
@@ -67,7 +63,7 @@ export default function Home() {
           />
         </Flex>
 
-        <Box mt={8}>
+        <Box mt={2}>
           {isLoading ? (
             <Text textAlign="center" color="#8A8A78" py={16}>
               Loading plants...
@@ -80,8 +76,8 @@ export default function Home() {
           )}
         </Box>
       </Box>
+</Box>
 
-      {/* <Footer /> */}
-    </Box>
+     
   );
 }

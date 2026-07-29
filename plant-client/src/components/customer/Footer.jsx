@@ -25,7 +25,7 @@ export default function Footer() {
   };
 
   return (
-    <Box as="footer" bg="#F1EFE6" mt={16}>
+    <Box as="footer" bg="#F1EFE6">
       <SimpleGrid
         columns={{ base: 1, md: 4 }}
         spacing={10}

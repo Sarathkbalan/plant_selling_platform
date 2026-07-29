@@ -1,6 +1,6 @@
 
 import { Wrap, WrapItem, Button } from "@chakra-ui/react";
-import { CATEGORIES } from "../services/plantService";
+import { CATEGORIES } from "../../services/plantService";
 
 export default function CategoryFilter({ active, onSelect }) {
   return (

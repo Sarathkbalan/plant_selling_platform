@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PlantApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6d79a9490d1c470671372e71d06435722c2e9473")]
 [assembly: System.Reflection.AssemblyProductAttribute("PlantApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PlantApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
 import AdminHeader from "../../components/admin/AdminHeader";
@@ -35,21 +35,34 @@ export default function Categories() {
   };
 
   return (
-    <Box p={6}>
+    <Box bg="gray.50" minH="100vh" p={8}>
       <AdminHeader
-        title="Categories"
+        title="Category Management"
         buttonText="Add Category"
         onClick={handleAdd}
       />
 
-      <DataTable
-        columns={columns}
-        data={categories}
-        actions={{
-          onEdit: handleEdit,
-          onDelete: handleDelete,
-        }}
-      />
+      <Text color="gray.500" mt={2} mb={6}>
+        Create, update and manage plant categories.
+      </Text>
+
+      <Box
+        bg="white"
+        borderRadius="xl"
+        boxShadow="md"
+        p={6}
+        border="1px solid"
+        borderColor="gray.200"
+      >
+        <DataTable
+          columns={columns}
+          data={categories}
+          actions={{
+            onEdit: handleEdit,
+            onDelete: handleDelete,
+          }}
+        />
+      </Box>
     </Box>
   );
 }

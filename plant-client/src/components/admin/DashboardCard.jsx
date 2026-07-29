@@ -1,32 +1,63 @@
-import { Box, Flex, Heading, Icon, Text } from "@chakra-ui/react";
 
-function DashboardCard({ title, value, icon, color }) {
+import {
+  Box,
+  Flex,
+  Icon,
+  Text,
+  Heading,
+} from "@chakra-ui/react";
+
+export default function DashboardCard({
+  title,
+  value,
+  subtitle,
+  icon,
+  color,
+  bg,
+}) {
   return (
     <Box
-      bg="gray.100"
-      p={5}
-      borderRadius="lg"
-      border="1px solid"
-      borderColor="gray.400"
-      boxShadow="md"
+      bg="white"
+      p={6}
+      borderRadius="xl"
+      shadow="md"
+      transition=".3s"
+      _hover={{
+        transform: "translateY(-4px)",
+        shadow: "xl",
+      }}
     >
-      <Flex justify="space-between" align="center">
-        <Box>
-          <Text color="gray.500" fontSize="xl" mb={2}>
-            {title}
-          </Text>
+      <Flex justify="space-between" mb={2}>
+        <Flex
+          h="45px"
+          w="45px"
+          rounded="full"
+          bg={bg}
+          align="center"
+          justify="center"
+        >
+          <Icon
+            as={icon}
+            color={color}
+            boxSize={6}
+          />
+        </Flex>
 
-          <Heading size="lg" color={color}>{value}</Heading>
-        </Box>
-
-        <Icon
-          as={icon}
-          boxSize={10}
+        <Text
+          bg={bg}
           color={color}
-        />
+          px={3}
+          py={1}
+          rounded="full"
+          fontSize="sm"
+        >
+          {subtitle}
+        </Text>
       </Flex>
+
+      <Text color="gray.500">{title}</Text>
+
+      <Heading mt={2}>{value}</Heading>
     </Box>
   );
 }
-
-export default DashboardCard;

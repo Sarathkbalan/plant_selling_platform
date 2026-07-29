@@ -83,7 +83,7 @@ export default function Plants() {
   return (
     <>
       <Flex justify="space-between" align="center" mb={6}>
-        <Heading color="white">My Plants</Heading>
+        <Heading color="#1B4332">My Plants</Heading>
 
         <Button
           leftIcon={<Plus size={18} />}

@@ -1,140 +1,249 @@
-// import { useEffect, useState } from "react";
-// import {
-//   Box,
-//   Heading,
-//   Text,
-//   Table,
-//   Thead,
-//   Tbody,
-//   Tr,
-//   Th,
-//   Td,
-//   Image,
-//   Flex,
-//   NumberInput,
-//   NumberInputField,
-//   Badge,
-//   useToast,
-// } from "@chakra-ui/react";
-// import SellerLayout from "../../layouts/SellerLayout";
-// import { getMyListings, updateStock } from "../../services/sellerPlantService";
+import { useState } from "react";
+import {
+  Box,
+  Heading,
+  Text,
+  Flex,
+  Input,
+  Select,
+  Table,
+  TableContainer,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Badge,
+  Button,
+} from "@chakra-ui/react";
 
-// const LOW_STOCK_THRESHOLD = 5;
+const inventoryData = [
+  {
+    id: 1,
+    plant: "Rose",
+    category: "Flower",
+    stock: 25,
+    price: "$25",
+  },
+  {
+    id: 2,
+    plant: "Snake Plant",
+    category: "Indoor Plant",
+    stock: 5,
+    price: "$40",
+  },
+  {
+    id: 3,
+    plant: "Aloe Vera",
+    category: "Medicinal Plant",
+    stock: 0,
+    price: "$18",
+  },
+  {
+    id: 4,
+    plant: "Money Plant",
+    category: "Indoor Plant",
+    stock: 14,
+    price: "$30",
+  },
+];
 
-// export default function Inventory() {
-//   const [plants, setPlants] = useState([]);
-//   const [isLoading, setIsLoading] = useState(true);
-//   const toast = useToast();
+export default function Inventory() {
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
 
-//   useEffect(() => {
-//     getMyListings()
-//       .then(setPlants)
-//       .catch(() => toast({ title: "Could not load inventory", status: "error" }))
-//       .finally(() => setIsLoading(false));
-//   }, []);
+  const filteredPlants = inventoryData.filter((plant) => {
+    const matchesSearch = plant.plant
+      .toLowerCase()
+      .includes(search.toLowerCase());
 
-//   const handleStockChange = async (plant, nextStock) => {
-//     try {
-//       const updated = await updateStock(plant._id, nextStock);
-//       setPlants((prev) => prev.map((p) => (p._id === plant._id ? updated : p)));
-//     } catch (err) {
-//       toast({ title: "Could not update stock", status: "error" });
-//     }
-//   };
+    if (filter === "In Stock") {
+      return matchesSearch && plant.stock > 5;
+    }
 
-//   const activePlants = plants.filter((p) => p.isActive);
+    if (filter === "Low Stock") {
+      return matchesSearch && plant.stock > 0 && plant.stock <= 5;
+    }
 
-//   return (
-//     <SellerLayout>
-//       <Heading size="lg" color="#1B4332" mb={1}>
-//         Inventory
-//       </Heading>
-//       <Text color="#5B5B4F" mb={6}>
-//         Keep stock levels current so customers only see what's actually available.
-//       </Text>
+    if (filter === "Out of Stock") {
+      return matchesSearch && plant.stock === 0;
+    }
 
-//       <Box bg="white" borderRadius="xl" overflow="hidden" boxShadow="sm">
-//         <Table variant="simple" size="sm">
-//           <Thead bg="#F1EFE6">
-//             <Tr>
-//               <Th>Plant</Th>
-//               <Th>Category</Th>
-//               <Th isNumeric>Current Stock</Th>
-//               <Th>Level</Th>
-//             </Tr>
-//           </Thead>
-//           <Tbody>
-//             {isLoading ? (
-//               <Tr>
-//                 <Td colSpan={4}>
-//                   <Text textAlign="center" color="#8A8A78" py={6}>
-//                     Loading inventory…
-//                   </Text>
-//                 </Td>
-//               </Tr>
-//             ) : activePlants.length === 0 ? (
-//               <Tr>
-//                 <Td colSpan={4}>
-//                   <Text textAlign="center" color="#8A8A78" py={6}>
-//                     No active listings to track yet.
-//                   </Text>
-//                 </Td>
-//               </Tr>
-//             ) : (
-//               activePlants.map((plant) => (
-//                 <Tr key={plant._id}>
-//                   <Td>
-//                     <Flex align="center" gap={3}>
-//                       <Image
-//                         src={plant.image}
-//                         alt={plant.name}
-//                         boxSize="40px"
-//                         objectFit="cover"
-//                         borderRadius="md"
-//                       />
-//                       <Text fontWeight="medium">{plant.name}</Text>
-//                     </Flex>
-//                   </Td>
-//                   <Td>{plant.category}</Td>
-//                   <Td isNumeric>
-//                     <NumberInput
-//                       size="sm"
-//                       min={0}
-//                       w="100px"
-//                       value={plant.stock}
-//                       onChange={(_, num) => handleStockChange(plant, Number.isNaN(num) ? 0 : num)}
-//                     >
-//                       <NumberInputField />
-//                     </NumberInput>
-//                   </Td>
-//                   <Td>
-//                     {plant.stock === 0 ? (
-//                       <Badge colorScheme="red">Out of stock</Badge>
-//                     ) : plant.stock <= LOW_STOCK_THRESHOLD ? (
-//                       <Badge colorScheme="orange">Low stock</Badge>
-//                     ) : (
-//                       <Badge colorScheme="green">In stock</Badge>
-//                     )}
-//                   </Td>
-//                 </Tr>
-//               ))
-//             )}
-//           </Tbody>
-//         </Table>
-//       </Box>
-//     </SellerLayout>
-//   );
-// }
+    return matchesSearch;
+  });
 
-import { Box, Heading, Text } from "@chakra-ui/react";
+  const getStatus = (stock) => {
+    if (stock === 0)
+      return {
+        label: "Out of Stock",
+        color: "red",
+      };
 
-function Inventory() {
+    if (stock <= 5)
+      return {
+        label: "Low Stock",
+        color: "orange",
+      };
+
+    return {
+      label: "In Stock",
+      color: "green",
+    };
+  };
+
   return (
-    <Box p={6}>
-      <Heading mb={4}>Inventory</Heading>
-      <Text>Inventory management page.</Text>
+    <Box bg="#F8FAF5" minH="100vh" p={8}>
+      <Heading color="#1B4332">
+        Inventory
+      </Heading>
+
+      <Text color="gray.600" mb={8}>
+        Manage your plant inventory.
+      </Text>
+
+      <Flex
+        gap={4}
+        mb={6}
+        direction={{
+          base: "column",
+          md: "row",
+        }}
+      >
+        <Input
+          placeholder="Search plant..."
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          bg="white"
+          borderColor="green.300"
+          _focus={{
+            borderColor: "green.500",
+          }}
+          _placeholder={{
+            color: "gray.400",
+          }}
+        />
+
+        <Select
+          w={{
+            base: "100%",
+            md: "220px",
+          }}
+          value={filter}
+          onChange={(e) =>
+            setFilter(e.target.value)
+          }
+          bg="white"
+          borderColor="green.300"
+        >
+          <option value="">All Stock</option>
+          <option>In Stock</option>
+          <option>Low Stock</option>
+          <option>Out of Stock</option>
+        </Select>
+      </Flex>
+
+      <Box
+        bg="white"
+        borderRadius="xl"
+        border="1px solid"
+        borderColor="green.100"
+        boxShadow="md"
+      >
+        <TableContainer>
+          <Table variant="simple">
+            <Thead bg="green.50">
+              <Tr>
+                <Th>Plant</Th>
+                <Th>Category</Th>
+                <Th isNumeric>Stock</Th>
+                <Th isNumeric>Price</Th>
+                <Th>Status</Th>
+                <Th>Actions</Th>
+              </Tr>
+            </Thead>
+
+            <Tbody>
+              {filteredPlants.map((plant) => {
+                const status = getStatus(
+                  plant.stock
+                );
+
+                return (
+                  <Tr
+                    key={plant.id}
+                    _hover={{
+                      bg: "green.50",
+                    }}
+                    color="#1B4332"
+                  >
+                    <Td fontWeight="600">
+                      {plant.plant}
+                    </Td>
+
+                    <Td>
+                      {plant.category}
+                    </Td>
+
+                    <Td isNumeric>
+                      {plant.stock}
+                    </Td>
+
+                    <Td isNumeric>
+                      {plant.price}
+                    </Td>
+
+                    <Td>
+                      <Badge
+                        colorScheme={
+                          status.color
+                        }
+                        px={3}
+                        py={1}
+                        borderRadius="full"
+                      >
+                        {status.label}
+                      </Badge>
+                    </Td>
+
+                    <Td>
+                      <Flex gap={2}>
+                        <Button
+                          size="sm"
+                          colorScheme="green"
+                          variant="outline"
+                        >
+                          Edit
+                        </Button>
+
+                        <Button
+                          size="sm"
+                          colorScheme="green"
+                        >
+                          Update Stock
+                        </Button>
+                      </Flex>
+                    </Td>
+                  </Tr>
+                );
+              })}
+
+              {filteredPlants.length === 0 && (
+                <Tr>
+                  <Td
+                    colSpan={6}
+                    textAlign="center"
+                    py={8}
+                  >
+                    No plants found.
+                  </Td>
+                </Tr>
+              )}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </Box>
     </Box>
   );
 }
-
-export default Inventory;

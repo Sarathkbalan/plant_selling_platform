@@ -52,7 +52,7 @@ export default function AddPlant() {
 
   return (
     <>
-      <Heading color="green.500" mb={6}>
+      <Heading color="#1B4332" mb={6}>
         Add Plant
       </Heading>
 

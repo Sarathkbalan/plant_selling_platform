@@ -6,7 +6,7 @@ function SellerLayout() {
   return (
     <Flex>
       <SellerSidebar />
-      <Box flex="1" p={6} bg="gray.400" minH="100vh">
+      <Box flex="1" p={6} bg="#f6efef" minH="100vh">
         
         <Outlet />
       </Box>

@@ -11,6 +11,7 @@ import {
   Divider,
   Badge,
   useToast,
+  Flex,
 } from "@chakra-ui/react";
 
 import { useAuth } from "../../context/AuthContext";
@@ -102,92 +103,196 @@ export default function Profile() {
   };
 
   return (
-    <Box p={6}>
-      <Heading size="lg" color="green.700" mb={6}>
-        Seller Profile
-      </Heading>
+  <Box minH="100vh" p={8}>
+    <Heading color="#1B4332">
+      Seller Profile
+    </Heading>
 
+    <Text color="gray.600" mb={2}>
+      Manage your profile information and password.
+    </Text>
+
+    <Box
+      bg="white"
+      maxW="1550px"
+      p={8}
+      borderRadius="2xl"
+      border="1px solid"
+      borderColor="green.100"
+      boxShadow="0 10px 30px rgba(0,0,0,.05)"
+    >
+      {/* Email */}
+   <Box
+  bg="green.50"
+  p={5}
+  borderRadius="lg"
+  border="1px solid"
+  borderColor="green.100"
+  mb={2}
+>
+  <Flex
+    justify="space-between"
+    align="center"
+    mb={2}
+  >
+    <Text
+      color="gray.600"
+      fontWeight="600"
+    >
+      Email
+    </Text>
+
+    <Text fontWeight="600">
+      {user.email}
+    </Text>
+  
+
+  <Divider my={3} />
+
+
+  
+    <Badge
+      colorScheme="green"
+      px={3}
+      py={1}
+      borderRadius="full"
+      color="gray.600"
+      border="1px solid"
+      borderColor="green.600"
+    >
+      {user.role}
+    </Badge>
+  </Flex>
+</Box>
+
+      {/* <Divider mb={8} />   */}
+
+      {/* Profile Form */}
       <Box
-        bg="gray.800"
-        p={6}
-        rounded="lg"
-        shadow="md"
-        maxW="700px"
+        as="form"
+        onSubmit={handleSaveName}
       >
-        <Text fontWeight="bold">Email</Text>
-        <Text mb={4}>{user.email}</Text>
-        
+        <Heading
+          size="md"
+          color="#1B4332"
+          mb={5}
+        >
+          Personal Information
+        </Heading>
 
-        <Text fontWeight="bold">Role</Text>
-        <Badge colorScheme="green" mb={4}>
-          {user.role}
-        </Badge>
+        <FormControl>
+          <FormLabel color="#1B4332">Full Name</FormLabel>
 
-        <Divider my={6} />
+          <Input
+            value={name}
+            onChange={(e) =>
+              setName(e.target.value)
+            }
+            bg="white"
+            borderColor="green.300"
+            _hover={{
+              borderColor: "green.500",
+            }}
+            _focus={{
+              borderColor: "green.500",
+              boxShadow:
+                "0 0 0 1px var(--chakra-colors-green-500)",
+            }}
+            _placeholder={{
+              color: "gray.500",
+            }}
+          />
+        </FormControl>
 
-        <Box as="form" onSubmit={handleSaveName}>
+        <Button
+          mt={6}
+          colorScheme="green"
+          isLoading={isSavingName}
+          type="submit"
+          w="200px"
+          mb={2}
+        >
+          Save Profile
+        </Button>
+      </Box>
+
+      {/* <Divider my={10} /> */}
+
+      {/* Password */}
+      <Box
+        as="form"
+        onSubmit={handleChangePassword}
+      >
+        <Heading
+          size="md"
+          color="#1B4332"
+          mb={5}
+        >
+          Change Password
+        </Heading>
+
+        <VStack spacing={5}>
           <FormControl>
-            <FormLabel>Full Name</FormLabel>
+            <FormLabel color="#1B4332">
+              Current Password
+            </FormLabel>
 
             <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              type="password"
+              value={currentPassword}
+              onChange={(e) =>
+                setCurrentPassword(
+                  e.target.value
+                )
+              }
+              borderColor="green.300"
+              _hover={{
+                borderColor: "green.500",
+              }}
+              _focus={{
+                borderColor: "green.500",
+              }}
+              _placeholder={{
+                color: "gray.500",
+              }}
             />
           </FormControl>
 
-          <Button
-            mt={4}
-            colorScheme="green"
-            type="submit"
-            isLoading={isSavingName}
-          >
-            Save Profile
-          </Button>
-        </Box>
+          <FormControl>
+            <FormLabel color="#1B4332">
+              New Password
+            </FormLabel>
 
-        <Divider my={8} />
+            <Input
+              type="password"
+              value={newPassword}
+              onChange={(e) =>
+                setNewPassword(
+                  e.target.value
+                )
+              }
+              borderColor="green.300"
+              _hover={{
+                borderColor: "green.500",
+              }}
+              _focus={{
+                borderColor: "green.500",
+              }}
+            />
+          </FormControl>
+        </VStack>
 
-        <Box as="form" onSubmit={handleChangePassword}>
-          <Heading size="md" mb={4}>
-            Change Password
-          </Heading>
-
-          <VStack spacing={4}>
-            <FormControl>
-              <FormLabel>Current Password</FormLabel>
-
-              <Input
-                type="password"
-                value={currentPassword}
-                onChange={(e) =>
-                  setCurrentPassword(e.target.value)
-                }
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>New Password</FormLabel>
-
-              <Input
-                type="password"
-                value={newPassword}
-                onChange={(e) =>
-                  setNewPassword(e.target.value)
-                }
-              />
-            </FormControl>
-          </VStack>
-
-          <Button
-            mt={5}
-            colorScheme="blue"
-            type="submit"
-            isLoading={isSavingPassword}
-          >
-            Update Password
-          </Button>
-        </Box>
+        <Button
+          mt={6}
+          colorScheme="green"
+          type="submit"
+          isLoading={isSavingPassword}
+          w="220px"
+        >
+          Update Password
+        </Button>
       </Box>
     </Box>
-  );
+  </Box>
+);
 }

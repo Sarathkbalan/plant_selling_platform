@@ -94,7 +94,7 @@ export default function EditPlant() {
           Back
         </Button>
 
-        <Heading color="green.500">
+        <Heading color="#1B4332">
           Edit Plant
         </Heading>
 

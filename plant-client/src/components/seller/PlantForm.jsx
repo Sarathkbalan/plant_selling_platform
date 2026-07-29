@@ -6,20 +6,38 @@ import {
   FormLabel,
   Input,
   Textarea,
-  Select,
   VStack,
 } from "@chakra-ui/react";
 
+import Select from "react-select";
+
 const fieldStyles = {
-  color: "white",
-  borderColor: "whiteAlpha.400",
-  _placeholder: { color: "whiteAlpha.600" },
-  _hover: { borderColor: "green.400" },
+  bg: "white",
+  color: "black",
+  border: "2px solid",
+  borderColor: "green.400",
+
+  _placeholder: {
+    color: "gray.500",
+  },
+
+  _hover: {
+    borderColor: "green.500",
+  },
+
   _focus: {
-    borderColor: "green.400",
-    boxShadow: "0 0 0 1px var(--chakra-colors-green-400)",
+    borderColor: "green.500",
+    boxShadow: "0 0 0 1px var(--chakra-colors-green-500)",
   },
 };
+
+const categoryOptions = [
+  { value: 1, label: "Flower" },
+  { value: 2, label: "Indoor Plant" },
+  { value: 3, label: "Outdoor Plant" },
+  { value: 4, label: "Medicinal Plant" },
+  { value: 5, label: "Succulent" },
+];
 
 function PlantForm({ onSubmit }) {
   const [form, setForm] = useState({
@@ -78,7 +96,7 @@ function PlantForm({ onSubmit }) {
     <Box
       as="form"
       onSubmit={handleSubmit}
-      bg="blackAlpha.800"
+      bg="white"
       p={6}
       borderRadius="lg"
       shadow="md"
@@ -86,18 +104,18 @@ function PlantForm({ onSubmit }) {
     >
       <VStack spacing={5}>
         <FormControl isRequired>
-          <FormLabel color="green.200">Plant Name</FormLabel>
+          <FormLabel color="green.500">Plant Name</FormLabel>
           <Input
             name="name"
             value={form.name}
             onChange={handleChange}
-            placeholder="Rose"
+            placeholder="plant name"
             {...fieldStyles}
           />
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel color="green.200">Description</FormLabel>
+          <FormLabel color="green.500">Description</FormLabel>
           <Textarea
             name="description"
             value={form.description}
@@ -108,7 +126,7 @@ function PlantForm({ onSubmit }) {
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel color="green.200">Price</FormLabel>
+          <FormLabel color="green.500">Price</FormLabel>
           <Input
             type="number"
             name="price"
@@ -120,7 +138,7 @@ function PlantForm({ onSubmit }) {
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel color="green.200">Stock</FormLabel>
+          <FormLabel color="green.500">Stock</FormLabel>
           <Input
             type="number"
             name="stock"
@@ -132,7 +150,7 @@ function PlantForm({ onSubmit }) {
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel color="green.200">Plant Image</FormLabel>
+          <FormLabel color="green.500">Plant Image</FormLabel>
 
           <Input
             type="file"
@@ -150,27 +168,54 @@ function PlantForm({ onSubmit }) {
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel color="green.200">Category</FormLabel>
+  <FormLabel color="green.500">Category</FormLabel>
 
-          <Select
-            name="categoryId"
-            value={form.categoryId}
-            onChange={handleChange}
-            placeholder="Select Category"
-            {...fieldStyles}
-            sx={{
-              "> option": {
-                color: "black",
-              },
-            }}
-          >
-            <option value={1}>Flower</option>
-            <option value={2}>Indoor Plant</option>
-            <option value={3}>Outdoor Plant</option>
-            <option value={4}>Medicinal Plant</option>
-            <option value={5}>Succulent</option>
-          </Select>
-        </FormControl>
+  <Select
+    options={categoryOptions}
+    placeholder="Select Category"
+    value={
+      categoryOptions.find(
+        (option) => option.value === form.categoryId
+      ) || null
+    }
+    onChange={(selectedOption) =>
+      setForm({
+        ...form,
+        categoryId: selectedOption.value,
+      })
+    }
+    styles={{
+      control: (provided, state) => ({
+        ...provided,
+        border: "2px solid #38A169",
+        borderRadius: "8px",
+        minHeight: "42px",
+        boxShadow: state.isFocused
+          ? "0 0 0 1px #38A169"
+          : "none",
+        "&:hover": {
+          borderColor: "#2F855A",
+        },
+      }),
+
+      menu: (provided) => ({
+        ...provided,
+        backgroundColor: "white",
+      }),
+
+      option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isFocused
+          ? "#C6F6D5"
+          : state.isSelected
+          ? "#38A169"
+          : "white",
+        color: state.isSelected ? "white" : "black",
+        cursor: "pointer",
+      }),
+    }}
+  />
+</FormControl>
 
         <Button
           type="submit"

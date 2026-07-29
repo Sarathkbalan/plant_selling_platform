@@ -1,6 +1,6 @@
 
 import { Box, Heading, Text, Button } from "@chakra-ui/react";
-import bgimage from "../assets/Container.png";
+import bgimage from "../../assets/Container.png";
 
 export default function Hero({
   title = "Bring Nature Home",

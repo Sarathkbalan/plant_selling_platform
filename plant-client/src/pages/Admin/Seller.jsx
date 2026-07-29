@@ -1,4 +1,8 @@
-import { Box, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 import AdminHeader from "../../components/admin/AdminHeader";
@@ -54,13 +58,26 @@ export default function Seller() {
   ];
 
   return (
-    <Box p={6}>
-      <AdminHeader title="Sellers" />
+    <Box bg="gray.50" minH="100vh" p={8}>
+      <AdminHeader title="Seller Management" />
 
-      <DataTable
-        columns={columns}
-        data={sellers}
-      />
+      <Text color="gray.500" mt={2} mb={6}>
+        View, approve and manage all registered sellers.
+      </Text>
+
+      <Box
+        bg="white"
+        borderRadius="2xl"
+        boxShadow="lg"
+        border="1px solid"
+        borderColor="gray.200"
+        p={6}
+      >
+        <DataTable
+          columns={columns}
+          data={sellers}
+        />
+      </Box>
     </Box>
   );
 }
