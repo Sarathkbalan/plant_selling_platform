@@ -61,13 +61,14 @@ public class CartService
             return new List<CartResponseDto>();
 
         return cart.CartItems.Select(x => new CartResponseDto
-        {
-            CartItemId = x.Id,
-            PlantId = x.PlantId,
-            PlantName = x.Plant.Name,
-            Price = x.Plant.Price,
-            Quantity = x.Quantity
-        }).ToList();
+    {
+        CartItemId = x.Id,
+        PlantId = x.PlantId,
+        PlantName = x.Plant.Name,
+        ImageUrl = x.Plant.ImageUrl,   // <-- Add this line
+        Price = x.Plant.Price,
+        Quantity = x.Quantity
+    }).ToList();
     }
 
     public async Task UpdateQuantity(int cartItemId, int quantity)

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Image,
@@ -7,15 +7,20 @@ import {
 } from "@chakra-ui/react";
 import { FaHeart } from "react-icons/fa";
 
-export default function ProductGallery() {
-  const images = [
-    "https://images.unsplash.com/photo-1545241047-6083a3684587?w=800",
-    "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800",
-    "https://images.unsplash.com/photo-1463320726281-696a485928c7?w=800",
-    "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=800",
-  ];
+function ProductGallery({ plant }) {
+  const images = plant?.imageUrl
+    ? [`http://localhost:5078/${plant.imageUrl}`]
+    : [];
 
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  const [selectedImage, setSelectedImage] = useState("");
+
+  useEffect(() => {
+    if (images.length > 0) {
+      setSelectedImage(images[0]);
+    }
+  }, [plant]);
+
+  if (!plant) return null;
 
   return (
     <Box>
@@ -29,58 +34,63 @@ export default function ProductGallery() {
       >
         <Image
           src={selectedImage}
-          alt="Plant"
+          alt={plant.name}
           w="100%"
           h={{ base: "350px", md: "500px" }}
           objectFit="cover"
+          fallbackSrc="https://via.placeholder.com/600x500?text=No+Image"
         />
 
-        {/* Favorite Button */}
+        {/* Wishlist Button */}
         <IconButton
           icon={<FaHeart />}
-          aria-label="Favorite"
+          aria-label="Add to Wishlist"
           position="absolute"
           top={4}
           right={4}
           colorScheme="red"
-          variant="solid"
           borderRadius="full"
         />
       </Box>
 
-      {/* Thumbnails */}
-      <HStack
-        mt={5}
-        spacing={4}
-        justify="center"
-      >
-        {images.map((img, index) => (
-          <Box
-            key={index}
-            cursor="pointer"
-            borderRadius="lg"
-            overflow="hidden"
-            border={
-              selectedImage === img
-                ? "3px solid #38A169"
-                : "2px solid #E2E8F0"
-            }
-            onClick={() => setSelectedImage(img)}
-            transition="0.2s"
-            _hover={{
-              transform: "scale(1.05)",
-            }}
-          >
-            <Image
-              src={img}
-              alt={`Thumbnail ${index + 1}`}
-              w="90px"
-              h="90px"
-              objectFit="cover"
-            />
-          </Box>
-        ))}
-      </HStack>
+      {/* Thumbnail Images */}
+      {images.length > 1 && (
+        <HStack mt={5} spacing={4} justify="center">
+          {images.map((img, index) => (
+            <Box
+              key={index}
+              cursor="pointer"
+              borderRadius="lg"
+              overflow="hidden"
+              border={
+                selectedImage === img
+                  ? "3px solid"
+                  : "2px solid"
+              }
+              borderColor={
+                selectedImage === img
+                  ? "green.500"
+                  : "gray.200"
+              }
+              onClick={() => setSelectedImage(img)}
+              transition="0.2s"
+              _hover={{
+                transform: "scale(1.05)",
+              }}
+            >
+              <Image
+                src={img}
+                alt={`${plant.name} ${index + 1}`}
+                w="90px"
+                h="90px"
+                objectFit="cover"
+              />
+            </Box>
+          ))}
+        </HStack>
+      )}
     </Box>
   );
 }
+
+export default ProductGallery;

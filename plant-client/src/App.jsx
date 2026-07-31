@@ -14,6 +14,7 @@ import Home from "./pages/Customer/Home";
 import Plants from "./pages/Customer/Plants";
 import PlantDetails from "./pages/Customer/PlantDetails";
 import Cart from "./pages/Customer/Cart";
+import Profile1 from "./pages/Customer/Profile1";
 
 // Seller Pages
 import Dashboard from "./pages/seller/Dashboard";
@@ -45,6 +46,7 @@ function App() {
         <Route path="/plants" element={<Plants />} />
         <Route path="/plants/:id" element={<PlantDetails />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/profile" element={<Profile1 />} />
       </Route>
 
       {/* Seller */}

@@ -1,45 +1,68 @@
-// import { Box, Heading, Text } from "@chakra-ui/react";
-// import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-// function PlantDetails() {
-//   const { id } = useParams();
-
-//   return (
-//     <Box p={6}>
-//       <Heading mb={4}>Plant Details</Heading>
-//       <Text>Plant ID: {id}</Text>
-//     </Box>
-//   );
-// }
-
-// export default PlantDetails;
 import {
   Box,
   Container,
   Grid,
   GridItem,
   VStack,
+  Spinner,
 } from "@chakra-ui/react";
 
-import Navbar from "../../components/customer/Navbar";
-import Footer from "../../components/customer/Footer";
+import Breadcrumbs from "../../components/customer/Product/Breadcrumbs";
+import ProductGallery from "../../components/customer/Product/ProductGallery";
+import ProductInfo from "../../components/customer/Product/ProductInfo";
+import SellerCard from "../../components/customer/product/SellerCard";
+import CareGuide from "../../components/customer/product/CareGuide";
+import ReviewSection from "../../components/customer/Product/ReviewSection";
+import RelatedProducts from "../../components/customer/Product/RelatedProducts";
 
-import Breadcrumbs from "../../components/customer/product/Breadcrumbs";
-import ProductGallery from "../../components/customer/product/ProductGallery";
-import ProductInfo from "../../components/customer/product/ProductInfo";
-
-// import SellerCard from "../../components/customer/product/SellerCard";
-// import CareGuide from "../../components/customer/product/CareGuide";
-// import ReviewSection from "../../components/customer/product/ReviewSection";
-// import RelatedProducts from "../../components/customer/product/RelatedProducts";
+import { getPlantById } from "../../services/plantService";
 
 export default function ProductDetails() {
-  return (
-    <Box bg="#FAF9F4" minH="100vh">
-      {/* <Navbar /> */}
+  const { id } = useParams();
 
+  const [plant, setPlant] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+ useEffect(() => {
+  const loadPlant = async () => {
+    console.log("Route ID:", id);
+
+    try {
+      const data = await getPlantById(id);
+      console.log("API Response:", data);
+      setPlant(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadPlant();
+}, [id]);
+  if (loading) {
+    return (
+      <Box textAlign="center" py={20}>
+        <Spinner size="xl" />
+      </Box>
+    );
+  }
+
+  if (!plant) {
+    return (
+      <Box textAlign="center" py={20}>
+        Plant not found.
+      </Box>
+    );
+  }
+
+  return (
+    <Box bg="#f8f6eb" minH="100vh">
       <Container maxW="7xl" py={8}>
-        <Breadcrumbs />
+        <Breadcrumbs plant={plant} />
 
         <Grid
           mt={6}
@@ -50,26 +73,21 @@ export default function ProductDetails() {
           gap={10}
         >
           <GridItem>
-            <ProductGallery />
+            <ProductGallery plant={plant} />
           </GridItem>
 
           <GridItem>
             <VStack spacing={6} align="stretch">
-              <ProductInfo />
-
-              {/* <SellerCard /> */}
+              <ProductInfo plant={plant} />
+              <SellerCard plant={plant} />
             </VStack>
           </GridItem>
         </Grid>
 
-        {/* <CareGuide /> */}
-
-        {/* <ReviewSection /> */}
-
-        {/* <RelatedProducts /> */}
+        <CareGuide plant={plant} />
+        <ReviewSection plant={plant} />
+        <RelatedProducts currentPlantId={plant.id} />
       </Container>
-
-      {/* <Footer /> */}
     </Box>
   );
 }

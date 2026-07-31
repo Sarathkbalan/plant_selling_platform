@@ -7,10 +7,9 @@ import {
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { Link as RouterLink } from "react-router-dom";
 
-export default function Breadcrumbs({
-  category = "Indoor Plants",
-  product = "Monstera Deliciosa",
-}) {
+function Breadcrumbs({ plant }) {
+  if (!plant) return null;
+
   return (
     <Breadcrumb
       spacing="8px"
@@ -35,13 +34,13 @@ export default function Breadcrumbs({
       <BreadcrumbItem>
         <BreadcrumbLink
           as={RouterLink}
-          to="/products"
+          to="/plants"
           _hover={{
             color: "green.600",
             textDecoration: "none",
           }}
         >
-          {category}
+          {plant.category?.name || "Plants"}
         </BreadcrumbLink>
       </BreadcrumbItem>
 
@@ -50,9 +49,11 @@ export default function Breadcrumbs({
           color="gray.700"
           fontWeight="medium"
         >
-          {product}
+          {plant.name}
         </Text>
       </BreadcrumbItem>
     </Breadcrumb>
   );
 }
+
+export default Breadcrumbs;

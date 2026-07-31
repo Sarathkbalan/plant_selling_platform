@@ -60,6 +60,7 @@ export default function QuantitySelector({
         <Text
           fontSize="lg"
           fontWeight="bold"
+          color="gray.800"
         >
           {quantity}
         </Text>

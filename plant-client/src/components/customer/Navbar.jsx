@@ -9,16 +9,45 @@ import {
   Avatar,
   HStack,
   Button,
+  Text,
 } from "@chakra-ui/react";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Search, ShoppingCart, LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getCart } from "../../services/cartService";
 
-export default function Navbar({ cartCount = 0, activeLink = "Browse" }) {
+export default function Navbar({ activeLink = "Browse" }) {
   const navigate = useNavigate();
+
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    loadCartCount();
+
+    // Refresh count every second
+    const interval = setInterval(loadCartCount, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadCartCount = async () => {
+    try {
+      const { data } = await getCart();
+
+      const totalItems = data.reduce(
+        (sum, item) => sum + item.quantity,
+        0
+      );
+
+      setCartCount(totalItems);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("user"); // if you store user info
+    localStorage.removeItem("user");
     navigate("/");
   };
 
@@ -32,94 +61,125 @@ export default function Navbar({ cartCount = 0, activeLink = "Browse" }) {
       borderBottom="1px solid"
       borderColor="blackAlpha.100"
     >
-      <Flex maxW="7xl" mx="auto" align="center" gap={6} px={6} py={4}>
+      <Flex
+        maxW="7xl"
+        mx="auto"
+        align="center"
+        gap={6}
+        px={6}
+        py={4}
+      >
+        {/* Logo */}
         <Link
-          href="/"
+          as={RouterLink}
+          to="/home"
           fontSize="2xl"
           fontWeight="bold"
           color="#1B4332"
-          letterSpacing="tight"
-          flexShrink={0}
           _hover={{ textDecoration: "none" }}
         >
           LeafNode
         </Link>
 
+        {/* Search */}
         <Box flex="1" maxW="md">
           <InputGroup>
-            <InputLeftElement pointerEvents="none" h="full" pl={2}>
-              <Icon as={Search} boxSize={4} color="#8A8A78" />
+            <InputLeftElement pointerEvents="none">
+              <Icon
+                as={Search}
+                boxSize={4}
+                color="gray.500"
+              />
             </InputLeftElement>
+
             <Input
-              placeholder="Search for your next plant..."
-              bg="#F1EFE6"
-              border="none"
+              placeholder="Search plants..."
               borderRadius="full"
-              pl={9}
-              fontSize="sm"
-              _placeholder={{ color: "#9B9B8A" }}
-              _focusVisible={{ boxShadow: "0 0 0 2px #1B433255" }}
+              bg="gray.100"
             />
           </InputGroup>
         </Box>
 
+        {/* Menu */}
         <HStack
-          flex="1"
           spacing={6}
-          fontSize="sm"
-          fontWeight="medium"
+          flex="1"
           display={{ base: "none", md: "flex" }}
         >
-          {["Browse", "Orders"].map((link) => (
-            <Link
-              key={link}
-              href={`/${link.toLowerCase()}`}
-              color={link === activeLink ? "#1B4332" : "#5B5B4F"}
-              borderBottom={
-                link === activeLink
-                  ? "2px solid #1B4332"
-                  : "2px solid transparent"
-              }
-              pb={1}
-              _hover={{ color: "#1B4332", textDecoration: "none" }}
-            >
-              {link}
-            </Link>
-          ))}
+          <Link
+            as={RouterLink}
+            to="/home"
+            color={
+              activeLink === "Browse"
+                ? "green.700"
+                : "gray.600"
+            }
+          >
+            Browse
+          </Link>
+
+          <Link
+            as={RouterLink}
+            to="/orders"
+            color={
+              activeLink === "Orders"
+                ? "green.700"
+                : "gray.600"
+            }
+          >
+            Orders
+          </Link>
         </HStack>
 
-        <HStack spacing={4}>
-          <Link href="/cart" position="relative">
-            <Icon as={ShoppingCart} boxSize={5} color="#2B2B22" />
+        {/* Right */}
+        <HStack spacing={5}>
+          {/* Cart */}
+          <Link
+            as={RouterLink}
+            to="/cart"
+            position="relative"
+          >
+            <Icon
+              color="green.700"
+              as={ShoppingCart}
+              boxSize={6}
+            />
+
             {cartCount > 0 && (
               <Flex
                 position="absolute"
                 top="-8px"
                 right="-8px"
-                bg="#D64545"
+                bg="red.500"
                 color="white"
-                fontSize="10px"
-                fontWeight="semibold"
                 borderRadius="full"
-                w={4}
-                h={4}
-                align="center"
+                w={5}
+                h={5}
                 justify="center"
+                align="center"
+                fontSize="11px"
+                fontWeight="bold"
               >
                 {cartCount}
               </Flex>
             )}
           </Link>
 
-          <Link href="/profile">
+          {/* Profile */}
+          <Link
+            as={RouterLink}
+            to="/profile"
+          >
             <Avatar
+            borderColor="green.400"
+              borderWidth="2px"
+              name="John Doe"
+              size="sm"
               src="/assets/avatar.jpg"
-              boxSize="36px"
-              ring="2px"
-              ringColor="#A9E5A0"
             />
           </Link>
 
+          {/* Logout */}
           <Button
             leftIcon={<LogOut size={16} />}
             colorScheme="red"

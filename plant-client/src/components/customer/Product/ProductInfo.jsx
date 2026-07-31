@@ -1,3 +1,4 @@
+
 import {
   Badge,
   Box,
@@ -20,7 +21,9 @@ import {
 
 import QuantitySelector from "./QuantitySelector";
 
-export default function ProductInfo() {
+function ProductInfo({ plant }) {
+  if (!plant) return null;
+
   return (
     <VStack align="stretch" spacing={6}>
       {/* Category */}
@@ -31,7 +34,7 @@ export default function ProductInfo() {
         borderRadius="full"
         w="fit-content"
       >
-        Indoor Plant
+        {plant.category?.name || "Plant"}
       </Badge>
 
       {/* Product Name */}
@@ -40,7 +43,7 @@ export default function ProductInfo() {
         fontWeight="bold"
         color="gray.800"
       >
-        Monstera Deliciosa
+        {plant.name}
       </Text>
 
       {/* Rating */}
@@ -53,10 +56,7 @@ export default function ProductInfo() {
           />
         ))}
 
-        <Text
-          ml={2}
-          color="gray.600"
-        >
+        <Text ml={2} color="gray.600">
           4.9 (128 Reviews)
         </Text>
       </HStack>
@@ -68,18 +68,11 @@ export default function ProductInfo() {
           fontWeight="bold"
           color="green.600"
         >
-          $45
+          ₹{plant.price}
         </Text>
 
-        <Text
-          textDecoration="line-through"
-          color="gray.400"
-        >
-          $60
-        </Text>
-
-        <Badge colorScheme="red">
-          25% OFF
+        <Badge colorScheme="green">
+          In Stock
         </Badge>
       </HStack>
 
@@ -87,10 +80,7 @@ export default function ProductInfo() {
 
       {/* Description */}
       <Box>
-        <Text
-          fontWeight="bold"
-          mb={2}
-        >
+        <Text fontWeight="bold" color="gray.600" mb={2}>
           Description
         </Text>
 
@@ -98,12 +88,46 @@ export default function ProductInfo() {
           color="gray.600"
           lineHeight="1.8"
         >
-          Monstera Deliciosa is one of the most popular indoor
-          plants. It features beautiful split leaves, purifies
-          the air, and adds a tropical touch to your home or
-          office.
+          {plant.description}
         </Text>
       </Box>
+
+      {/* Product Details */}
+      <Box>
+        <Text fontWeight="bold" color="gray.600" mb={3}>
+          Product Details
+        </Text>
+
+        <VStack align="stretch" spacing={3}>
+          <HStack justify="space-between">
+            <Text color="gray.500">Category</Text>
+            <Text fontWeight="medium" color="gray.500">
+              {plant.category?.name || "N/A"}
+            </Text>
+          </HStack>
+
+          <HStack justify="space-between">
+            <Text color="gray.500">Stock</Text>
+            <Text
+              color={
+                plant.stock > 0
+                  ? "green.600"
+                  : "red.500"
+              }
+              fontWeight="bold"
+            >
+              {plant.stock} Available
+            </Text>
+          </HStack>
+
+          <HStack justify="space-between">
+            <Text color="gray.500">Plant ID</Text>
+            <Text color="gray.500">#{plant.id}</Text>
+          </HStack>
+        </VStack>
+      </Box>
+
+      <Divider />
 
       {/* Features */}
       <VStack align="stretch" spacing={4}>
@@ -112,7 +136,7 @@ export default function ProductInfo() {
             as={FaLeaf}
             color="green.500"
           />
-          <Text>Air Purifying Plant</Text>
+          <Text color="gray.600">Fresh & Healthy Plant</Text>
         </HStack>
 
         <HStack>
@@ -120,7 +144,7 @@ export default function ProductInfo() {
             as={FaTruck}
             color="green.500"
           />
-          <Text>Free Delivery Available</Text>
+          <Text color="gray.600">Free Delivery Available</Text>
         </HStack>
 
         <HStack>
@@ -128,7 +152,7 @@ export default function ProductInfo() {
             as={FaUndo}
             color="green.500"
           />
-          <Text>7-Day Easy Replacement</Text>
+          <Text color="gray.600">7-Day Easy Replacement</Text>
         </HStack>
 
         <HStack>
@@ -136,7 +160,7 @@ export default function ProductInfo() {
             as={FaShieldAlt}
             color="green.500"
           />
-          <Text>Healthy Plant Guarantee</Text>
+          <Text color="gray.600">Healthy Plant Guarantee</Text>
         </HStack>
       </VStack>
 
@@ -147,6 +171,7 @@ export default function ProductInfo() {
         <Text
           mb={3}
           fontWeight="bold"
+          color="gray.600"
         >
           Quantity
         </Text>
@@ -161,6 +186,8 @@ export default function ProductInfo() {
           colorScheme="green"
           size="lg"
           flex={1}
+          isDisabled={plant.stock === 0}
+          onClick={() => console.log("Add to Cart", plant.id)}
         >
           Add to Cart
         </Button>
@@ -170,6 +197,8 @@ export default function ProductInfo() {
           colorScheme="orange"
           size="lg"
           flex={1}
+          isDisabled={plant.stock === 0}
+          onClick={() => console.log("Buy Now", plant.id)}
         >
           Buy Now
         </Button>
@@ -177,3 +206,5 @@ export default function ProductInfo() {
     </VStack>
   );
 }
+
+export default ProductInfo;
