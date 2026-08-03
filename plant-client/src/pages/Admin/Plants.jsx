@@ -1,24 +1,40 @@
-import { Box, Text } from "@chakra-ui/react";
-import { useState } from "react";
+
+import { Box, Text, useToast } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import AdminHeader from "../../components/admin/AdminHeader";
 import DataTable from "../../components/admin/DataTable";
+import {
+  getAllPlants,
+  deletePlant,
+} from "../../services/adminService";
 
 export default function Plants() {
-  const [plants] = useState([
-    {
-      id: 1,
-      name: "Rose",
-      price: 250,
-      stock: 20,
-    },
-    {
-      id: 2,
-      name: "Aloe Vera",
-      price: 300,
-      stock: 10,
-    },
-  ]);
+  const [plants, setPlants] = useState([]);
+
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    loadPlants();
+  }, []);
+
+  const loadPlants = async () => {
+    try {
+      const data = await getAllPlants();
+      setPlants(data);
+    } catch (error) {
+      console.error(error);
+
+      toast({
+        title: "Failed to load plants",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
 
   const columns = [
     {
@@ -26,8 +42,28 @@ export default function Plants() {
       accessor: "id",
     },
     {
+      header: "Image",
+      accessor: "imageUrl",
+      Cell: (row) => (
+        <img
+          src={`http://localhost:5078${row.imageUrl}`}
+          alt={row.name}
+          width="60"
+          height="60"
+          style={{
+            borderRadius: "8px",
+            objectFit: "cover",
+          }}
+        />
+      ),
+    },
+    {
       header: "Plant Name",
       accessor: "name",
+    },
+    {
+      header: "Category",
+      accessor: "categoryName",
     },
     {
       header: "Price",
@@ -41,15 +77,39 @@ export default function Plants() {
   ];
 
   const handleAdd = () => {
-    console.log("Add Plant");
+    navigate("/admin/plants/add");
   };
 
   const handleEdit = (plant) => {
-    console.log("Edit", plant);
+    navigate(`/admin/plants/edit/${plant.id}`);
   };
 
-  const handleDelete = (plant) => {
-    console.log("Delete", plant);
+  const handleDelete = async (plant) => {
+    if (!window.confirm(`Delete "${plant.name}"?`)) return;
+
+    try {
+      await deletePlant(plant.id);
+
+      setPlants((prev) =>
+        prev.filter((p) => p.id !== plant.id)
+      );
+
+      toast({
+        title: "Plant deleted",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error(error);
+
+      toast({
+        title: "Delete failed",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (

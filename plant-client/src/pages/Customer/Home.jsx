@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState } from "react";
 import { Box, Flex, Text } from "@chakra-ui/react";
 import CategoryFilter from "../../components/customer/CategoryFilter";
@@ -33,6 +32,14 @@ export default function Home() {
     loadPlants();
   }, []);
 
+  // Generate categories dynamically from plants
+  const categories = useMemo(() => {
+    return [
+      "All Plants",
+      ...new Set(plants.map((plant) => plant.categoryName)),
+    ];
+  }, [plants]);
+
   const visiblePlants = useMemo(() => {
     return filterAndSortPlants(plants, category, sortBy);
   }, [plants, category, sortBy]);
@@ -42,7 +49,7 @@ export default function Home() {
   };
 
   return (
-    <Box bg="#FAF9F4" >
+    <Box bg="#FAF9F4">
       <Hero />
 
       <Box as="main" maxW="7xl" mx="auto" px={6} mt={10}>
@@ -52,10 +59,11 @@ export default function Home() {
           justify={{ sm: "space-between" }}
           gap={4}
         >
-          <CategoryFilter
-            active={category}
-            onSelect={setCategory}
-          />
+        <CategoryFilter
+      categories={categories}
+      active={category}
+      onSelect={setCategory}
+    />
 
           <SortDropdown
             value={sortBy}
@@ -76,8 +84,6 @@ export default function Home() {
           )}
         </Box>
       </Box>
-</Box>
-
-     
+    </Box>
   );
 }

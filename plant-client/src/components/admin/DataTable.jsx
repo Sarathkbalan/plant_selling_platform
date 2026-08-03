@@ -5,59 +5,72 @@ import {
   Tr,
   Th,
   Td,
-  Button,
+  IconButton,
+  HStack,
+  Image,
 } from "@chakra-ui/react";
+import { Pencil, Trash2 } from "lucide-react";
 
-function DataTable({
+export default function DataTable({
   columns,
   data,
   actions,
 }) {
   return (
-    <Table
-      variant="simple"
-      bg="white"
-      borderRadius="lg"
-    >
-      <Thead>
+    <Table variant="simple">
+      <Thead bg="green.100">
         <Tr>
-          {columns.map((col) => (
-            <Th key={col.accessor}>
-              {col.header}
+          {columns.map((column) => (
+            <Th key={column.accessor || column.header}>
+              {column.header}
             </Th>
           ))}
 
-          {actions && <Th>Actions</Th>}
+          {actions && <Th textAlign="center">Actions</Th>}
         </Tr>
       </Thead>
 
       <Tbody>
         {data.map((row) => (
-          <Tr key={row.id}>
-            {columns.map((col) => (
-              <Td color="gray.600" key={col.accessor}>
-                {row[col.accessor]}
+          <Tr key={row.id} color="green.600">
+            {columns.map((column) => (
+              <Td key={column.accessor || column.header}>
+                {column.Cell
+                  ? column.Cell(row)
+                  : column.accessor === "imageUrl"
+                  ? (
+                    <Image
+                      src={`http://localhost:5078${row.imageUrl}`}
+                      alt={row.name}
+                      boxSize="70px"
+                      objectFit="cover"
+                      borderRadius="md"
+                      fallbackSrc="https://via.placeholder.com/70"
+                    />
+                  )
+                  : row[column.accessor]}
               </Td>
             ))}
 
             {actions && (
-              <Td>
-                <Button
-                  size="sm"
-                  colorScheme="blue"
-                  mr={2}
-                  onClick={() => actions.onEdit(row)}
-                >
-                  Edit
-                </Button>
+              <Td textAlign="center">
+                <HStack justify="center" spacing={2}>
+                  <IconButton
+                    aria-label="Edit"
+                    icon={<Pencil size={18} />}
+                    colorScheme="blue"
+                    size="sm"
+                    onClick={() => actions.onEdit(row)}
+                  />
 
-                <Button
-                  size="sm"
-                  colorScheme="red"
-                  onClick={() => actions.onDelete(row)}
-                >
-                  Delete
-                </Button>
+                  <IconButton
+                    aria-label="Delete"
+                    icon={<Trash2 size={18} />}
+                    colorScheme="red"
+                    size="sm"
+                    onClick={() => actions.onDelete(row)}
+                  />
+                </HStack>
               </Td>
             )}
           </Tr>
@@ -66,5 +79,3 @@ function DataTable({
     </Table>
   );
 }
-
-export default DataTable;

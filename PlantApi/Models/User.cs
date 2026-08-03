@@ -12,7 +12,7 @@ public class User
     // Customer | Seller | Admin
     public string Role { get; set; } = "Customer";
 
-    public bool IsApproved { get; set; } = true;
+    public bool IsApproved { get; set; } = false;
 
     public ICollection<Order> Orders { get; set; } = new List<Order>();
 

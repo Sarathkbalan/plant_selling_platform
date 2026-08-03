@@ -23,9 +23,7 @@ public class PlantController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Plant>>> GetPlants()
     {
-        var plants = await _context.Plants
-            .Include(p => p.Category)
-            .ToListAsync();
+        var plants = await _context.Plants.ToListAsync();
 
         return Ok(plants);
     }
@@ -34,9 +32,7 @@ public class PlantController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Plant>> GetPlant(int id)
     {
-        var plant = await _context.Plants
-            .Include(p => p.Category)
-            .FirstOrDefaultAsync(p => p.Id == id);
+        var plant = await _context.Plants.FirstOrDefaultAsync(p => p.Id == id);
 
         if (plant == null)
             return NotFound("Plant not found.");
@@ -46,57 +42,44 @@ public class PlantController : ControllerBase
 
     // POST: api/plant
     [HttpPost]
-public async Task<IActionResult> AddPlant([FromForm] PlantDto dto)
-{
-    Console.WriteLine("===== AddPlant Called =====");
-    Console.WriteLine(dto.Name);
-    Console.WriteLine(dto.Image?.FileName);
-
-    var category = await _context.Categories.FindAsync(dto.CategoryId);
-
-    if (category == null)
+    public async Task<IActionResult> AddPlant([FromForm] PlantDto dto)
     {
-        Console.WriteLine("Invalid Category");
-        return BadRequest("Invalid Category.");
-    }
+        string imagePath = "";
 
-    string imagePath = "";
-
-    if (dto.Image != null)
-    {
-        var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
-
-        if (!Directory.Exists(uploadsFolder))
-            Directory.CreateDirectory(uploadsFolder);
-
-        var fileName = Guid.NewGuid() + Path.GetExtension(dto.Image.FileName);
-        var filePath = Path.Combine(uploadsFolder, fileName);
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        if (dto.Image != null)
         {
-            await dto.Image.CopyToAsync(stream);
+            var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+
+            if (!Directory.Exists(uploadsFolder))
+                Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = Guid.NewGuid() + Path.GetExtension(dto.Image.FileName);
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await dto.Image.CopyToAsync(stream);
+            }
+
+            imagePath = "/uploads/" + fileName;
         }
 
-        imagePath = "/uploads/" + fileName;
+        var plant = new Plant
+        {
+            Name = dto.Name,
+            Description = dto.Description,
+            Price = dto.Price,
+            Stock = dto.Stock,
+            CategoryName = dto.CategoryName,
+            ImageUrl = imagePath
+        };
+
+        _context.Plants.Add(plant);
+        await _context.SaveChangesAsync();
+
+        return Ok(plant);
     }
 
-    var plant = new Plant
-    {
-        Name = dto.Name,
-        Description = dto.Description,
-        Price = dto.Price,
-        Stock = dto.Stock,
-        CategoryId = dto.CategoryId,
-        ImageUrl = imagePath
-    };
-
-    _context.Plants.Add(plant);
-    await _context.SaveChangesAsync();
-
-    Console.WriteLine("Plant Saved Successfully");
-
-    return Ok(plant);
-}
     // PUT: api/plant/1
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdatePlant(int id, [FromForm] PlantDto dto)
@@ -106,16 +89,11 @@ public async Task<IActionResult> AddPlant([FromForm] PlantDto dto)
         if (plant == null)
             return NotFound("Plant not found.");
 
-        var category = await _context.Categories.FindAsync(dto.CategoryId);
-
-        if (category == null)
-            return BadRequest("Invalid Category.");
-
         plant.Name = dto.Name;
         plant.Description = dto.Description;
         plant.Price = dto.Price;
         plant.Stock = dto.Stock;
-        plant.CategoryId = dto.CategoryId;
+        plant.CategoryName = dto.CategoryName;
 
         if (dto.Image != null)
         {
@@ -124,8 +102,7 @@ public async Task<IActionResult> AddPlant([FromForm] PlantDto dto)
             if (!Directory.Exists(uploadsFolder))
                 Directory.CreateDirectory(uploadsFolder);
 
-            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.Image.FileName);
-
+            var fileName = Guid.NewGuid() + Path.GetExtension(dto.Image.FileName);
             var filePath = Path.Combine(uploadsFolder, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))

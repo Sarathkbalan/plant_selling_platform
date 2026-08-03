@@ -19,7 +19,10 @@ import {
 import { Pencil, Trash2, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { getMyListings, deletePlant } from "../../services/sellerPlantService";
+import {
+  getMyListings,
+  deletePlant,
+} from "../../services/sellerPlantService";
 
 export default function Plants() {
   const [plants, setPlants] = useState([]);
@@ -53,9 +56,7 @@ export default function Plants() {
   }, []);
 
   const handleDelete = async (plant) => {
-    const confirmDelete = window.confirm(`Delete "${plant.name}" ?`);
-
-    if (!confirmDelete) return;
+    if (!window.confirm(`Delete "${plant.name}" ?`)) return;
 
     try {
       await deletePlant(plant.id);
@@ -99,7 +100,6 @@ export default function Plants() {
         borderRadius="lg"
         overflowX="auto"
         shadow="md"
-        color="gray.700"
       >
         <Table variant="simple">
           <Thead bg="green.100">
@@ -145,31 +145,38 @@ export default function Plants() {
                     />
                   </Td>
 
-                  <Td fontWeight="bold">{plant.name}</Td>
+                  <Td fontWeight="bold" color="green.600">{plant.name}</Td>
 
-                  <Td>{plant.category?.name}</Td>
+                  {/* Category Name */}
+                  <Td color="green.600">{plant.categoryName}</Td>
 
-                  <Td isNumeric>₹{plant.price}</Td>
+                  <Td isNumeric color="green.600">
+                    ₹{plant.price}
+                  </Td>
 
-                  <Td isNumeric>{plant.stock}</Td>
+                  <Td isNumeric color="green.600">
+                    {plant.stock}
+                  </Td>
 
                   <Td>
                     <Badge colorScheme={plant.stock > 0 ? "green" : "red"}>
-                      {plant.stock > 0 ? "Available" : "Out of Stock"}
+                      {plant.stock > 0
+                        ? "Available"
+                        : "Out of Stock"}
                     </Badge>
                   </Td>
 
                   <Td textAlign="center">
-                    <IconButton
-                      aria-label="Edit"
-                      icon={<Pencil size={16} />}
-                      colorScheme="blue"
-                      size="sm"
-                      mr={2}
-                      onClick={() =>
-                        navigate(`/seller/plants/edit/${plant.id}`)
-                      }
-                    />
+                   <IconButton
+  aria-label="Edit"
+  icon={<Pencil size={16} />}
+  colorScheme="blue"
+  size="sm"
+  mr={2}
+  onClick={() =>
+    navigate(`/seller/plants/edit/${plant.id}`)
+  }
+/>
 
                     <IconButton
                       aria-label="Delete"

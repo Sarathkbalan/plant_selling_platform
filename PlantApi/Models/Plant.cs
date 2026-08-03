@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace PlantApi.Models;
 
@@ -6,6 +6,7 @@ public class Plant
 {
     public int Id { get; set; }
 
+    [Required]
     public string Name { get; set; } = "";
 
     public string Description { get; set; } = "";
@@ -18,8 +19,6 @@ public class Plant
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public int CategoryId { get; set; }
-
-    [JsonIgnore]
-    public Category? Category { get; set; }
+    [Required]
+    public string CategoryName { get; set; } = "";
 }

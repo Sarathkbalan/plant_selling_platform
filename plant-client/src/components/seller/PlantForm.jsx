@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,9 +7,8 @@ import {
   Input,
   Textarea,
   VStack,
+  Select,
 } from "@chakra-ui/react";
-
-import Select from "react-select";
 
 const fieldStyles = {
   bg: "white",
@@ -31,66 +30,68 @@ const fieldStyles = {
   },
 };
 
-const categoryOptions = [
-  { value: 1, label: "Flower" },
-  { value: 2, label: "Indoor Plant" },
-  { value: 3, label: "Outdoor Plant" },
-  { value: 4, label: "Medicinal Plant" },
-  { value: 5, label: "Succulent" },
-];
-
-function PlantForm({ onSubmit }) {
+export default function PlantForm({
+  onSubmit,
+  initialData = null,
+}) {
   const [form, setForm] = useState({
     name: "",
     description: "",
     price: "",
     stock: "",
-    categoryId: "",
+    categoryName: "",
     image: null,
   });
 
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        name: initialData.name || "",
+        description: initialData.description || "",
+        price: initialData.price || "",
+        stock: initialData.stock || "",
+        categoryName: initialData.categoryName || "",
+        image: null,
+      });
+    }
+  }, [initialData]);
+
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]:
-        e.target.name === "price" ||
-        e.target.name === "stock" ||
-        e.target.name === "categoryId"
-          ? Number(e.target.value)
-          : e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]:
+        name === "price" || name === "stock"
+          ? Number(value)
+          : value,
+    }));
   };
 
   const handleImageChange = (e) => {
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       image: e.target.files[0],
-    });
+    }));
   };
 
- const handleSubmit = (e) => {
-  e.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const formData = new FormData();
+    const formData = new FormData();
 
-  formData.append("name", form.name);
-  formData.append("description", form.description);
-  formData.append("price", form.price);
-  formData.append("stock", form.stock);
-  formData.append("categoryId", form.categoryId);
+    formData.append("name", form.name);
+    formData.append("description", form.description);
+    formData.append("price", form.price);
+    formData.append("stock", form.stock);
+    formData.append("categoryName", form.categoryName);
 
-  if (form.image) {
-    formData.append("image", form.image);
-  }
+    if (form.image) {
+      formData.append("image", form.image);
+    }
 
-  console.log("===== FormData =====");
-
-  for (const [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
-
-  onSubmit(formData);
-};
+    onSubmit(formData);
+  };
 
   return (
     <Box
@@ -100,132 +101,149 @@ function PlantForm({ onSubmit }) {
       p={6}
       borderRadius="lg"
       shadow="md"
-      w="1200px"
+      w={{base: "100%", md: "600px",lg: "1200px"}}
     >
-      <VStack spacing={5}>
+      <VStack spacing={5} >
         <FormControl isRequired>
-          <FormLabel color="green.500">Plant Name</FormLabel>
+          <FormLabel color="green.500">
+            Plant Name
+          </FormLabel>
+
           <Input
             name="name"
             value={form.name}
             onChange={handleChange}
-            placeholder="plant name"
+            placeholder="Plant Name"
             {...fieldStyles}
           />
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel color="green.500">Description</FormLabel>
+          <FormLabel color="green.500">
+            Description
+          </FormLabel>
+
           <Textarea
             name="description"
             value={form.description}
             onChange={handleChange}
-            placeholder="Beautiful flower"
+            placeholder="Description"
             {...fieldStyles}
           />
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel color="green.500">Price</FormLabel>
+          <FormLabel color="green.500">
+            Price
+          </FormLabel>
+
           <Input
             type="number"
             name="price"
             value={form.price}
             onChange={handleChange}
-            placeholder="250"
             {...fieldStyles}
           />
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel color="green.500">Stock</FormLabel>
+          <FormLabel color="green.500">
+            Stock
+          </FormLabel>
+
           <Input
             type="number"
             name="stock"
             value={form.stock}
             onChange={handleChange}
-            placeholder="20"
             {...fieldStyles}
           />
         </FormControl>
 
         <FormControl isRequired>
-          <FormLabel color="green.500">Plant Image</FormLabel>
+          <FormLabel color="green.500">
+            Category
+          </FormLabel>
+
+          <Select
+            name="categoryName"
+            value={form.categoryName}
+            onChange={handleChange}
+            {...fieldStyles}
+          >
+            <option value="">Select Category</option>
+            <option value="Flower">Flower</option>
+            <option value="Indoor Plant">
+              Indoor Plant
+            </option>
+            <option value="Outdoor Plant">
+              Outdoor Plant
+            </option>
+            <option value="Medicinal Plant">
+              Medicinal Plant
+            </option>
+            <option value="Succulent">
+              Succulent
+            </option>
+            <option value="Fruit Plant">
+              Fruit Plant
+            </option>
+            <option value="Herbal Plant">
+              Herbal Plant
+            </option>
+            <option value="Bonsai">
+              Bonsai
+            </option>
+          </Select>
+        </FormControl>
+
+        <FormControl>
+          <FormLabel color="green.500">
+            Plant Image
+          </FormLabel>
 
           <Input
             type="file"
             accept="image/*"
             onChange={handleImageChange}
             p={1}
-            color="white"
           />
 
           {form.image && (
-            <Box color="green.300" fontSize="sm">
+            <Box
+              color="green.500"
+              fontSize="sm"
+              mt={2}
+            >
               {form.image.name}
             </Box>
           )}
+
+          {!form.image &&
+            initialData?.imageUrl && (
+              <Box mt={3}>
+                <img
+                  src={`http://localhost:5078${initialData.imageUrl}`}
+                  alt={initialData.name}
+                  width="150"
+                  style={{
+                    borderRadius: "8px",
+                  }}
+                />
+              </Box>
+            )}
         </FormControl>
-
-        <FormControl isRequired>
-  <FormLabel color="green.500">Category</FormLabel>
-
-  <Select
-    options={categoryOptions}
-    placeholder="Select Category"
-    value={
-      categoryOptions.find(
-        (option) => option.value === form.categoryId
-      ) || null
-    }
-    onChange={(selectedOption) =>
-      setForm({
-        ...form,
-        categoryId: selectedOption.value,
-      })
-    }
-    styles={{
-      control: (provided, state) => ({
-        ...provided,
-        border: "2px solid #38A169",
-        borderRadius: "8px",
-        minHeight: "42px",
-        boxShadow: state.isFocused
-          ? "0 0 0 1px #38A169"
-          : "none",
-        "&:hover": {
-          borderColor: "#2F855A",
-        },
-      }),
-
-      menu: (provided) => ({
-        ...provided,
-        backgroundColor: "white",
-      }),
-
-      option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isFocused
-          ? "#C6F6D5"
-          : state.isSelected
-          ? "#38A169"
-          : "white",
-        color: state.isSelected ? "white" : "black",
-        cursor: "pointer",
-      }),
-    }}
-  />
-</FormControl>
 
         <Button
           type="submit"
           colorScheme="green"
           width="full"
         >
-          Save Plant
+          {initialData
+            ? "Update Plant"
+            : "Save Plant"}
         </Button>
       </VStack>
     </Box>
   );
 }
-export default PlantForm;

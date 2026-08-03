@@ -1,4 +1,3 @@
-
 import api from "./api";
 
 export const getPlants = async () => {
@@ -11,14 +10,6 @@ export const getPlantById = async (id) => {
   return response.data;
 };
 
-export const CATEGORIES = [
-  "All Plants",
-  "Indoor",
-  "Outdoor",
-  "Succulents",
-  "Flowering",
-];
-
 export const SORT_OPTIONS = [
   { value: "popular", label: "Popular" },
   { value: "price-asc", label: "Price: Low to High" },
@@ -30,7 +21,7 @@ export function filterAndSortPlants(plants, category, sortBy) {
 
   if (category && category !== "All Plants") {
     result = result.filter(
-      (plant) => plant.category?.name === category
+      (plant) => plant.categoryName === category
     );
   }
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlantApi.Data;
 
@@ -11,9 +12,11 @@ using PlantApi.Data;
 namespace PlantApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260731094835_RemoveCategoryTable")]
+    partial class RemoveCategoryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,6 +68,23 @@ namespace PlantApi.Migrations
                     b.HasIndex("PlantId");
 
                     b.ToTable("CartItems");
+                });
+
+            modelBuilder.Entity("PlantApi.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("PlantApi.Models.Order", b =>
@@ -132,6 +152,9 @@ namespace PlantApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -158,6 +181,8 @@ namespace PlantApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Plants");
                 });
@@ -284,6 +309,13 @@ namespace PlantApi.Migrations
                     b.Navigation("Plant");
                 });
 
+            modelBuilder.Entity("PlantApi.Models.Plant", b =>
+                {
+                    b.HasOne("PlantApi.Models.Category", null)
+                        .WithMany("Plants")
+                        .HasForeignKey("CategoryId");
+                });
+
             modelBuilder.Entity("PlantApi.Models.Review", b =>
                 {
                     b.HasOne("PlantApi.Models.Plant", "Plant")
@@ -306,6 +338,11 @@ namespace PlantApi.Migrations
             modelBuilder.Entity("PlantApi.Models.Cart", b =>
                 {
                     b.Navigation("CartItems");
+                });
+
+            modelBuilder.Entity("PlantApi.Models.Category", b =>
+                {
+                    b.Navigation("Plants");
                 });
 
             modelBuilder.Entity("PlantApi.Models.Order", b =>
