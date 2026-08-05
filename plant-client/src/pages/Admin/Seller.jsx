@@ -1,6 +1,8 @@
 import {
   Box,
   Text,
+  Button,
+  HStack,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -9,7 +11,12 @@ import AdminHeader from "../../components/admin/AdminHeader";
 import DataTable from "../../components/admin/DataTable";
 import StatusBadge from "../../components/admin/StatusBadge";
 
-import { getSellers } from "../../services/adminService";
+import {
+  getSellers,
+  approveSeller,
+  rejectSeller,
+  deleteSeller,
+} from "../../services/adminService";
 
 export default function Seller() {
   const [sellers, setSellers] = useState([]);
@@ -33,6 +40,77 @@ export default function Seller() {
     }
   };
 
+  const handleApprove = async (id) => {
+    try {
+      await approveSeller(id);
+
+      toast({
+        title: "Seller Approved",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      fetchSellers();
+    } catch (error) {
+      toast({
+        title: "Approval Failed",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      await rejectSeller(id);
+
+      toast({
+        title: "Seller Rejected",
+        status: "info",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      fetchSellers();
+    } catch (error) {
+      toast({
+        title: "Reject Failed",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+  const handleDelete = async (id) => {
+  if (!window.confirm("Are you sure you want to delete this seller?")) {
+    return;
+  }
+
+  try {
+    await deleteSeller(id);
+
+    toast({
+      title: "Seller Deleted",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+
+    fetchSellers();
+  } catch (error) {
+    toast({
+      title: "Delete Failed",
+      description:
+        error.response?.data?.message || "Unable to delete seller.",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+  }
+};
+
   const columns = [
     {
       header: "ID",
@@ -55,6 +133,39 @@ export default function Seller() {
         />
       ),
     },
+    {
+      header: "Action",
+      accessor: "action",
+     Cell: (row) => (
+  <HStack spacing={2}>
+    {!row.isApproved ? (
+      <Button
+        colorScheme="green"
+        size="sm"
+        onClick={() => handleApprove(row.id)}
+      >
+        Approve
+      </Button>
+    ) : (
+      <Button
+        colorScheme="yellow"
+        size="sm"
+        onClick={() => handleReject(row.id)}
+      >
+        Reject
+      </Button>
+    )}
+
+    <Button
+      colorScheme="red"
+      size="sm"
+      onClick={() => handleDelete(row.id)}
+    >
+      Delete
+    </Button>
+  </HStack>
+),
+    },
   ];
 
   return (
@@ -73,10 +184,7 @@ export default function Seller() {
         borderColor="gray.200"
         p={6}
       >
-        <DataTable
-          columns={columns}
-          data={sellers}
-        />
+        <DataTable columns={columns} data={sellers} />
       </Box>
     </Box>
   );

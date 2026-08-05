@@ -24,7 +24,7 @@ function Register() {
     name: "",
     email: "",
     password: "",
-    role: "consumer",
+    role: "customer",
   });
 
   const handleChange = (e) => {
@@ -152,10 +152,10 @@ function Register() {
   value={formData.role}
   onChange={handleChange}
 >
-  <option value="consumer" style={{ backgroundColor: "#ffffff", color: "#000" }}>
-    Consumer
+  <option value="Customer" style={{ backgroundColor: "#ffffff", color: "#000" }}>
+    Customer
   </option>
-  <option value="seller" style={{ backgroundColor: "#ffffff", color: "#000" }}>
+  <option value="Seller" style={{ backgroundColor: "#ffffff", color: "#000" }}>
     Seller
   </option>
  

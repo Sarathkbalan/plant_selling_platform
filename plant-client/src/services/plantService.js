@@ -10,6 +10,11 @@ export const getPlantById = async (id) => {
   return response.data;
 };
 
+
+export const getCategorySplit = async () => {
+  const response = await api.get("/plant/category-split");
+  return response.data;
+};
 export const SORT_OPTIONS = [
   { value: "popular", label: "Popular" },
   { value: "price-asc", label: "Price: Low to High" },

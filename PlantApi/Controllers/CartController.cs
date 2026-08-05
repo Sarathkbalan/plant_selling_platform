@@ -1,87 +1,14 @@
-// using Microsoft.AspNetCore.Authorization;
-// using Microsoft.AspNetCore.Mvc;
-// using System.Security.Claims;
-// using PlantApi.DTOs;
-// using PlantApi.Services;
-
-// namespace PlantApi.Controllers;
-
-// [ApiController]
-// [Route("api/[controller]")]
-// // [Authorize]
-// public class CartController : ControllerBase
-// {
-//     private readonly CartService _cartService;
-
-//     public CartController(CartService cartService)
-//     {
-//         _cartService = cartService;
-//     }
-
-//     private int GetUserId()
-//     {
-//         return int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-//     }
-
-//     [HttpPost("add")]
-//     public async Task<IActionResult> Add(AddToCartDto dto)
-//     {
-//         await _cartService.AddToCart(GetUserId(), dto);
-
-//         return Ok(new
-//         {
-//             message = "Added to cart"
-//         });
-//     }
-
-//     [HttpGet]
-//     public async Task<IActionResult> Get()
-//     {
-//         return Ok(await _cartService.GetCart(GetUserId()));
-//     }
-
-//     [HttpPut("{id}")]
-//     public async Task<IActionResult> Update(int id, UpdateCartDto dto)
-//     {
-//         await _cartService.UpdateQuantity(id, dto.Quantity);
-
-//         return Ok(new
-//         {
-//             message = "Quantity Updated"
-//         });
-//     }
-
-//     [HttpDelete("{id}")]
-//     public async Task<IActionResult> Delete(int id)
-//     {
-//         await _cartService.RemoveItem(id);
-
-//         return Ok(new
-//         {
-//             message = "Item Removed"
-//         });
-//     }
-
-//     [HttpDelete("clear")]
-//     public async Task<IActionResult> Clear()
-//     {
-//         await _cartService.ClearCart(GetUserId());
-
-//         return Ok(new
-//         {
-//             message = "Cart Cleared"
-//         });
-//     }
-// }
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PlantApi.DTOs;
 using PlantApi.Services;
+using System.Security.Claims;
 
 namespace PlantApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class CartController : ControllerBase
 {
     private readonly CartService _cartService;
@@ -91,59 +18,127 @@ public class CartController : ControllerBase
         _cartService = cartService;
     }
 
-    // Temporary user id for testing
     private int GetUserId()
     {
-        return 1;
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            throw new UnauthorizedAccessException("User is not authenticated.");
+        }
+
+        return int.Parse(userId);
     }
 
     [HttpPost("add")]
     public async Task<IActionResult> Add(AddToCartDto dto)
     {
-        await _cartService.AddToCart(GetUserId(), dto);
-
-        return Ok(new
+        try
         {
-            message = "Added to cart"
-        });
+            await _cartService.AddToCart(GetUserId(), dto);
+
+            return Ok(new
+            {
+                success = true,
+                message = "Plant added to cart."
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                success = false,
+                message = ex.Message,
+                inner = ex.InnerException?.Message
+            });
+        }
     }
 
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        return Ok(await _cartService.GetCart(GetUserId()));
+        try
+        {
+            var cart = await _cartService.GetCart(GetUserId());
+
+            return Ok(cart);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                success = false,
+                message = ex.Message
+            });
+        }
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateCartDto dto)
     {
-        await _cartService.UpdateQuantity(id, dto.Quantity);
-
-        return Ok(new
+        try
         {
-            message = "Quantity Updated"
-        });
+            await _cartService.UpdateQuantity(id, dto.Quantity);
+
+            return Ok(new
+            {
+                success = true,
+                message = "Quantity updated successfully."
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                success = false,
+                message = ex.Message
+            });
+        }
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        await _cartService.RemoveItem(id);
-
-        return Ok(new
+        try
         {
-            message = "Item Removed"
-        });
+            await _cartService.RemoveItem(id);
+
+            return Ok(new
+            {
+                success = true,
+                message = "Item removed successfully."
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                success = false,
+                message = ex.Message
+            });
+        }
     }
 
     [HttpDelete("clear")]
     public async Task<IActionResult> Clear()
     {
-        await _cartService.ClearCart(GetUserId());
-
-        return Ok(new
+        try
         {
-            message = "Cart Cleared"
-        });
+            await _cartService.ClearCart(GetUserId());
+
+            return Ok(new
+            {
+                success = true,
+                message = "Cart cleared successfully."
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new
+            {
+                success = false,
+                message = ex.Message
+            });
+        }
     }
 }

@@ -15,20 +15,24 @@ function PlantCard({ plant }) {
   const toast = useToast();
 
   const handleAddToCart = async (e) => {
-    e.stopPropagation();
+  e.stopPropagation();
 
-    try {
-      await addToCart(plant.id, 1);
+  console.log("Plant Object:", plant);
+  console.log("Plant ID:", plant.id);
 
-      navigate("/cart");
-    } catch (error) {
-      toast({
-        title: "Failed",
-        description: error.response?.data?.message || error.message,
-        status: "error",
-      });
-    }
-  };
+  try {
+    await addToCart(plant.id, 1);
+    navigate("/cart");
+  } catch (error) {
+    console.log(error.response?.data);
+
+    toast({
+      title: "Failed",
+      description: error.response?.data?.inner || error.response?.data?.message,
+      status: "error",
+    });
+  }
+};
 
   return (
     <Box

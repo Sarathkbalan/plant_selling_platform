@@ -1,20 +1,34 @@
-
 import api from "./api";
 
 // =========================
 // Sellers
 // =========================
+
+// Get all sellers
 export const getSellers = async () => {
-  const response = await api.get("/admin/sellers");
-  return response.data;
+  const { data } = await api.get("/admin/sellers");
+  return data;
+};
+
+// Approve seller
+export const approveSeller = async (id) => {
+  const { data } = await api.put(`/admin/approve/${id}`);
+  return data;
+};
+
+// Reject seller
+export const rejectSeller = async (id) => {
+  const { data } = await api.put(`/admin/reject/${id}`);
+  return data;
 };
 
 // =========================
 // Customers
 // =========================
+
 export const getCustomers = async () => {
-  const response = await api.get("/admin/customers");
-  return response.data;
+  const { data } = await api.get("/admin/customers");
+  return data;
 };
 
 // =========================
@@ -23,40 +37,46 @@ export const getCustomers = async () => {
 
 // Get all plants
 export const getAllPlants = async () => {
-  const response = await api.get("/plant");
-  return response.data;
+  const { data } = await api.get("/plant");
+  return data;
 };
 
-// Get plant by ID
+// Get plant by id
 export const getPlantById = async (id) => {
-  const response = await api.get(`/plant/${id}`);
-  return response.data;
+  const { data } = await api.get(`/plant/${id}`);
+  return data;
 };
 
 // Delete plant
 export const deletePlant = async (id) => {
-  const response = await api.delete(`/plant/${id}`);
-  return response.data;
+  const { data } = await api.delete(`/plant/${id}`);
+  return data;
 };
 
-// Add plant
+// Create plant
 export const addPlant = async (formData) => {
-  const response = await api.post("/plant", formData, {
+  const { data } = await api.post("/plant", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
-  return response.data;
+  return data;
 };
 
 // Update plant
 export const updatePlant = async (id, formData) => {
-  const response = await api.put(`/plant/${id}`, formData, {
+  const { data } = await api.put(`/plant/${id}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
+  return data;
+};
+
+// Delete Seller
+export const deleteSeller = async (id) => {
+  const response = await api.delete(`/admin/seller/${id}`);
   return response.data;
 };

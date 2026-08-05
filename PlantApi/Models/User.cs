@@ -12,7 +12,7 @@ public class User
     // Customer | Seller | Admin
     public string Role { get; set; } = "Customer";
 
-    public bool IsApproved { get; set; } = false;
+    public bool IsApproved { get; set; } = true; // For sellers, indicates if they are approved by an admin
 
     public ICollection<Order> Orders { get; set; } = new List<Order>();
 

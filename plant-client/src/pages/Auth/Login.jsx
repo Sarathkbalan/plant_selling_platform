@@ -7,7 +7,6 @@ import {
   Input,
   Heading,
   VStack,
-  HStack,
   Text,
   Link,
   useToast,
@@ -40,23 +39,19 @@ function Login() {
     try {
       const result = await login(formData);
 
-      // Debug API response
       console.log("Login Result:", result);
 
-      // Save JWT
+      // Save token
       localStorage.setItem("token", result.token);
 
-      // Save logged-in user
+      // Save user
       const user = {
         name: result.name,
         role: result.role,
         isApproved: result.isApproved,
       };
 
-      console.log("User Object:", user);
-
       localStorage.setItem("user", JSON.stringify(user));
-
       setUser(user);
 
       toast({
@@ -67,30 +62,50 @@ function Login() {
         isClosable: true,
       });
 
-      switch (result.role.toLowerCase()) {
-        case "admin":
-          navigate("/admin");
-          break;
+     switch (result.role.toLowerCase()) {
+  case "admin":
+    navigate("/admin");
+    break;
 
-        case "seller":
-          navigate("/seller");
-          break;
+  case "seller":
+    navigate("/seller");
+    break;
 
-        case "consumer":
-          navigate("/home");
-          break;
+  
+  case "customer":
+    navigate("/home");
+    break;
 
-        default:
-          navigate("/");
-      }
+  default:
+    navigate("/");
+}
     } catch (error) {
       console.error(error);
 
+      const message =
+        error.response?.data?.message || "Invalid email or password/Waiting for admin approval";
+
+      // Seller approval message
+      if (
+        message.toLowerCase().includes("approval") ||
+        message.toLowerCase().includes("approved")
+      ) {
+        toast({
+          title: "Approval Required",
+          description:
+            "Your seller account is pending admin approval. Please wait until the administrator approves your account.",
+          status: "warning",
+          duration: 5000,
+          isClosable: true,
+        });
+        return;
+      }
+
       toast({
-        title:
-          error.response?.data?.message || "Invalid email or password",
+        title: "Login Failed",
+        description: message,
         status: "error",
-        duration: 3000,
+        duration: 4000,
         isClosable: true,
       });
     }
@@ -133,8 +148,6 @@ function Login() {
 
         <form onSubmit={handleSubmit}>
           <VStack spacing={4}>
-           
-
             <FormControl isRequired>
               <FormLabel color="gray.700">Email</FormLabel>
               <Input

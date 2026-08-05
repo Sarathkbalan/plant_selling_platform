@@ -20,6 +20,7 @@ export default function Navbar({ activeLink = "Browse" }) {
   const navigate = useNavigate();
 
   const [cartCount, setCartCount] = useState(0);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     loadCartCount();

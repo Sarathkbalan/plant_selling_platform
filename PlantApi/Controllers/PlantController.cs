@@ -135,4 +135,26 @@ public class PlantController : ControllerBase
             message = "Plant deleted successfully."
         });
     }
+    [HttpGet("category-split")]
+public async Task<IActionResult> GetCategorySplit()
+{
+    var totalPlants = await _context.Plants.CountAsync();
+
+    if (totalPlants == 0)
+    {
+        return Ok(new List<object>());
+    }
+
+    var result = await _context.Plants
+        .GroupBy(p => p.CategoryName)
+        .Select(g => new
+        {
+            name = g.Key,
+            value = Math.Round((double)g.Count() * 100 / totalPlants, 0)
+        })
+        .OrderByDescending(x => x.value)
+        .ToListAsync();
+
+    return Ok(result);
+}
 }

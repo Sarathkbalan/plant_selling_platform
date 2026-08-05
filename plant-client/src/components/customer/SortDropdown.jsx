@@ -19,10 +19,17 @@ export default function SortDropdown({ value, onChange, onFilterClick }) {
         _focusVisible={{ boxShadow: "0 0 0 2px #1B433255" }}
       >
         {SORT_OPTIONS.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            Sort by: {opt.label}
-          </option>
-        ))}
+    <option
+      key={opt.value}
+      value={opt.value}
+      style={{
+        backgroundColor: "#E6FFFA",
+        color: "#1A202C",
+      }}
+    >
+       {opt.label}
+    </option>
+  ))}
       </Select>
 
       <IconButton
