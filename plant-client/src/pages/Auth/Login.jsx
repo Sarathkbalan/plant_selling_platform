@@ -46,10 +46,11 @@ function Login() {
 
       // Save user
       const user = {
-        name: result.name,
-        role: result.role,
-        isApproved: result.isApproved,
-      };
+  name: result.name,
+  email: result.email,
+  role: result.role,
+  isApproved: result.isApproved,
+};
 
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);

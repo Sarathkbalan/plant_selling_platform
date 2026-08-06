@@ -93,6 +93,7 @@ public class AuthController : ControllerBase
             token,
             role = user.Role,
             name = user.Name,
+            email = user.Email,
             isApproved = user.IsApproved
         });
     }

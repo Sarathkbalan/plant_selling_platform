@@ -20,47 +20,47 @@ function CareGuide() {
         Plant Care Guide
       </Heading>
 
-      <List spacing={3}>
-        <ListItem>
-          <ListIcon
-            as={CheckCircleIcon}
-            color="green.500"
-          />
-          Water twice a week.
-        </ListItem>
+     <List spacing={3} color="gray.700">
+  <ListItem>
+    <ListIcon
+      as={CheckCircleIcon}
+      color="green.500"
+    />
+    Water twice a week.
+  </ListItem>
 
-        <ListItem>
-          <ListIcon
-            as={CheckCircleIcon}
-            color="green.500"
-          />
-          Keep in indirect sunlight.
-        </ListItem>
+  <ListItem>
+    <ListIcon
+      as={CheckCircleIcon}
+      color="green.500"
+    />
+    Keep in indirect sunlight.
+  </ListItem>
 
-        <ListItem>
-          <ListIcon
-            as={CheckCircleIcon}
-            color="green.500"
-          />
-          Use organic fertilizer every month.
-        </ListItem>
+  <ListItem>
+    <ListIcon
+      as={CheckCircleIcon}
+      color="green.500"
+    />
+    Use organic fertilizer every month.
+  </ListItem>
 
-        <ListItem>
-          <ListIcon
-            as={CheckCircleIcon}
-            color="green.500"
-          />
-          Maintain room temperature between 20°C–30°C.
-        </ListItem>
+  <ListItem>
+    <ListIcon
+      as={CheckCircleIcon}
+      color="green.500"
+    />
+    Maintain room temperature between 20°C–30°C.
+  </ListItem>
 
-        <ListItem>
-          <ListIcon
-            as={CheckCircleIcon}
-            color="green.500"
-          />
-          Repot once every year.
-        </ListItem>
-      </List>
+  <ListItem>
+    <ListIcon
+      as={CheckCircleIcon}
+      color="green.500"
+    />
+    Repot once every year.
+  </ListItem>
+</List>
     </Box>
   );
 }

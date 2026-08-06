@@ -78,13 +78,13 @@ export default function ProductDetails() {
 
           <GridItem>
             <VStack spacing={6} align="stretch">
-              <ProductInfo plant={plant} />
-              <SellerCard plant={plant} />
+              <ProductInfo plant={plant}  />
+              {/* <SellerCard plant={plant} /> */}
             </VStack>
           </GridItem>
         </Grid>
 
-        <CareGuide plant={plant} />
+        {/* <CareGuide plant={plant} /> */}
         <ReviewSection plant={plant} />
         <RelatedProducts currentPlantId={plant.id} />
       </Container>

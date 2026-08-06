@@ -69,13 +69,13 @@ export default function DataTable({
               {actions && (
                 <Td textAlign="center">
                   <HStack justify="center" spacing={2}>
-                    <IconButton
+                    {/* <IconButton
                       aria-label="Edit"
                       icon={<Pencil size={18} />}
                       colorScheme="blue"
                       size="sm"
                       onClick={() => actions.onEdit(row)}
-                    />
+                    /> */}
 
                     <IconButton
                       aria-label="Delete"

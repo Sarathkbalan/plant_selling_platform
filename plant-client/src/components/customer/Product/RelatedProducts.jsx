@@ -1,3 +1,7 @@
+
+
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -5,40 +9,47 @@ import {
   Heading,
   Image,
   Text,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 
-const products = [
-  {
-    id: 1,
-    name: "Money Plant",
-    price: 250,
-    image:
-      "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735",
-  },
-  {
-    id: 2,
-    name: "Snake Plant",
-    price: 320,
-    image:
-      "https://images.unsplash.com/photo-1459156212016-c812468e2115",
-  },
-  {
-    id: 3,
-    name: "Peace Lily",
-    price: 410,
-    image:
-      "https://images.unsplash.com/photo-1463320726281-696a485928c7",
-  },
-  {
-    id: 4,
-    name: "Aloe Vera",
-    price: 180,
-    image:
-      "https://images.unsplash.com/photo-1501004318641-b39e6451bec6",
-  },
-];
+import { getPlants } from "../../../services/plantService";
 
-function RelatedProducts() {
+function RelatedProducts({ currentPlantId }) {
+  const navigate = useNavigate();
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadPlants();
+  }, [currentPlantId]);
+
+  const loadPlants = async () => {
+    try {
+      const data = await getPlants();
+
+      // Remove current plant and show only 4 related plants
+      const related = data
+        .filter((p) => p.id !== currentPlantId)
+        .slice(0, 4);
+
+      setProducts(related);
+    } catch (error) {
+      console.error("Error loading related products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Center py={10}>
+        <Spinner size="lg" color="green.500" />
+      </Center>
+    );
+  }
+
   return (
     <Box>
       <Heading size="lg" mb={6}>
@@ -48,8 +59,8 @@ function RelatedProducts() {
       <Grid
         templateColumns={{
           base: "1fr",
-          md: "repeat(2,1fr)",
-          lg: "repeat(4,1fr)",
+          md: "repeat(2, 1fr)",
+          lg: "repeat(4, 1fr)",
         }}
         gap={6}
       >
@@ -63,14 +74,15 @@ function RelatedProducts() {
             borderWidth="1px"
           >
             <Image
-              src={plant.image}
+              src={`http://localhost:5078${plant.imageUrl}`}
+              alt={plant.name}
               h="220px"
               w="100%"
               objectFit="cover"
             />
 
             <Box p={4}>
-              <Heading size="sm">
+              <Heading size="sm" color="green.600">
                 {plant.name}
               </Heading>
 
@@ -86,6 +98,7 @@ function RelatedProducts() {
                 mt={4}
                 colorScheme="green"
                 w="full"
+                onClick={() => navigate(`/home`)}
               >
                 View Details
               </Button>
